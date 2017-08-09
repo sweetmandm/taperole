@@ -1,0 +1,19 @@
+- name: Ensure Gemfile contains daemons gem
+  command: "grep -qs \"gem 'daemons'\" {{ be_app_path }}/Gemfile"
+
+- name: Install Delayed Job Monit
+  template:
+    src: dj_monit_config.j2
+    dest: /etc/monit/conf.d/delayed_job
+    mode: u=rw,g=r,o=r
+  register: delayed_job_monit_config
+
+- name: Install Delayed Job Runner
+  template:
+    src: dj_monit_runner.j2
+    dest: /usr/bin/dj_monit_runner
+  register: delayed_job_runner_config
+
+- name: Reload Monit
+  command: bash -lc "monit reload"
+  when: delayed_job_monit_config.changed or delayed_job_runner_config.changed
