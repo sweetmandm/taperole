@@ -38,7 +38,7 @@
     - database_load
     - puma_activate
     - frontend_deploy
-    # - delayed_job
+    # - install_delayed_job
     # - whenever
     # - sidekiq
     # - redis
